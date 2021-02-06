@@ -1,0 +1,113 @@
+plugins {
+	id 'org.springframework.boot' version '2.1.8.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'java'
+	id 'com.google.cloud.tools.jib' version '1.2.0'
+	id 'eu.davidea.grabver' version '1.0.1'
+}
+
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'application'
+apply plugin: 'eu.davidea.grabver'
+
+
+group = 'com.robosoftin.evaluation'
+version = versioning.name
+sourceCompatibility = '1.8'
+apply plugin: 'application'
+mainClassName = "com.robosoftin.evaluation.SpringBootApplication"
+
+versioning {
+	major 0
+	minor 0
+	saveOn "bootDistZip"
+}
+
+springBoot {
+	buildInfo()
+}
+
+configurations {
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.1.2.RELEASE'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'mysql:mysql-connector-java'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	//lambok
+	compileOnly 'org.projectlombok:lombok:1.18.4'
+	annotationProcessor 'org.projectlombok:lombok:1.18.4'
+	//upgrade to Junit5 from default spring-boot Junit4 version
+	testCompile "org.junit.jupiter:junit-jupiter-api:5.2.0"
+	testCompile "org.junit.jupiter:junit-jupiter-params:5.2.0"
+	testRuntime "org.junit.jupiter:junit-jupiter-engine:5.2.0"
+	testCompile "org.mockito:mockito-core:2.+"
+	testCompile('org.mockito:mockito-junit-jupiter:2.18.3')
+	//karate
+	testCompile 'com.intuit.karate:karate-junit5:0.9.4'
+	testCompile 'com.intuit.karate:karate-apache:0.9.4'
+	//cucumber reporting
+	testCompile 'net.masterthought:cucumber-reporting:4.8.0'
+	//log4j config
+	compile('org.springframework.boot:spring-boot-starter-log4j2')
+	compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.9'
+	compile group: 'commons-io', name: 'commons-io', version: '2.6'
+	//sleuth
+	compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-sleuth', version: '2.1.6.RELEASE'
+
+	//swagger
+	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	//yaml dependency for log4j config
+	compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.9'
+	//jwt
+	compile 'io.jsonwebtoken:jjwt-api:0.10.7'
+	runtime 'io.jsonwebtoken:jjwt-impl:0.10.7',
+			'io.jsonwebtoken:jjwt-jackson:0.10.7'
+
+	// https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml
+	compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.10.0'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.10.0'
+	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.6'
+	compile group: 'org.springframework.boot', name: 'spring-boot-devtools'
+	// https://mvnrepository.com/artifact/org.springframework.retry/spring-retry
+	compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.2.5.RELEASE'
+	// https://mvnrepository.com/artifact/org.springframework/spring-aspects
+	compile group: 'org.springframework', name: 'spring-aspects', version: '5.2.2.RELEASE'
+
+
+
+	runtime group: 'org.flywaydb', name: 'flyway-gradle-plugin', version: '4.2.0'
+	compile 'org.apache.commons:commons-lang3:3.9'
+
+}
+
+task getVersion {
+	doFirst {
+		println 'Appversion:' + version
+	}
+}
+
+task getApplicationName {
+	doFirst {
+		println 'ApplicationName:' + rootProject.name
+	}
+}
+configurations {
+	// to exclude default logging
+	compile.exclude module: 'spring-boot-starter-logging'
+}
+
